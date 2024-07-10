@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b287fdda512cdf6950d6b0832687d10b",
+    "content-hash": "00b0cacdb245051d6768f0300dd2fb22",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -3995,16 +3995,16 @@
         },
         {
             "name": "symfony/mailer",
-            "version": "v7.1.1",
+            "version": "v7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mailer.git",
-                "reference": "2eaad2e167cae930f25a3d731fec8b2ded5e751e"
+                "reference": "8fcff0af9043c8f8a8e229437cea363e282f9aee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mailer/zipball/2eaad2e167cae930f25a3d731fec8b2ded5e751e",
-                "reference": "2eaad2e167cae930f25a3d731fec8b2ded5e751e",
+                "url": "https://api.github.com/repos/symfony/mailer/zipball/8fcff0af9043c8f8a8e229437cea363e282f9aee",
+                "reference": "8fcff0af9043c8f8a8e229437cea363e282f9aee",
                 "shasum": ""
             },
             "require": {
@@ -4055,7 +4055,7 @@
             "description": "Helps sending emails",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/mailer/tree/v7.1.1"
+                "source": "https://github.com/symfony/mailer/tree/v7.1.2"
             },
             "funding": [
                 {
@@ -4071,7 +4071,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:57:53+00:00"
+            "time": "2024-06-28T08:00:31+00:00"
         },
         {
             "name": "symfony/messenger",
