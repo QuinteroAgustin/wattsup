@@ -15,7 +15,9 @@ class ResetPasswordType extends AbstractType
         $builder
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Nouveau mot de passe',
-            ]);
+                'mapped' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
