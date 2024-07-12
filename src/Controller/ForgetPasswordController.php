@@ -26,7 +26,7 @@ class ForgetPasswordController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // Find the user by email
+            // Find the User by email
             $user = $em->getRepository(User::class)->findOneBy(['email' => $forgetPasswordRequest->email]);
 
             if ($user) {
