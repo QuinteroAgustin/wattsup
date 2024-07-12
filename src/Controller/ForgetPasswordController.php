@@ -9,18 +9,32 @@ use App\Form\ForgetPasswordType;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Model\ForgetPasswordRequest;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ForgetPasswordController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     #[Route('/forget/password', name: 'app_forget_password')]
     public function index(Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
+        // Si l'utilisateur est déjà authentifié, le rediriger vers la page de chat
+        if ($this->security->getUser()) {
+            return new RedirectResponse($this->generateUrl('app_chat'));
+        }
+
         $forgetPasswordRequest = new ForgetPasswordRequest();
         $form = $this->createForm(ForgetPasswordType::class, $forgetPasswordRequest);
 
