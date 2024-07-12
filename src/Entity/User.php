@@ -58,30 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: ForgetPassword::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $forgetPasswords;
 
-    /**
-     * @var Collection<int, Commission>
-     */
-    #[ORM\OneToMany(targetEntity: Commission::class, mappedBy: 'author')]
-    private Collection $authors;
-
-    /**
-     * @var Collection<int, Commission>
-     */
-    #[ORM\ManyToMany(targetEntity: Commission::class, mappedBy: 'notification')]
-    private Collection $notification;
-
-    /**
-     * @var Collection<int, Message>
-     */
-    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'user')]
-    private Collection $messages;
-
     public function __construct()
     {
         $this->forgetPasswords = new ArrayCollection();
-        $this->authors = new ArrayCollection();
-        $this->notification = new ArrayCollection();
-        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,93 +198,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($forgetPassword->getUser() === $this) {
                 $forgetPassword->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commission>
-     */
-    public function getAuthors(): Collection
-    {
-        return $this->authors;
-    }
-
-    public function addAuthor(Commission $author): static
-    {
-        if (!$this->authors->contains($author)) {
-            $this->authors->add($author);
-            $author->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAuthor(Commission $author): static
-    {
-        if ($this->authors->removeElement($author)) {
-            // set the owning side to null (unless already changed)
-            if ($author->getAuthor() === $this) {
-                $author->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commission>
-     */
-    public function getNotification(): Collection
-    {
-        return $this->notification;
-    }
-
-    public function addNotification(Commission $notification): static
-    {
-        if (!$this->notification->contains($notification)) {
-            $this->notification->add($notification);
-            $notification->addNotification($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(Commission $notification): static
-    {
-        if ($this->notification->removeElement($notification)) {
-            $notification->removeNotification($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): static
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): static
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getUser() === $this) {
-                $message->setUser(null);
             }
         }
 
