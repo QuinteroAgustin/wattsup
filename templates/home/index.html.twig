@@ -1,7 +1,142 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="main">
-  toto
+<div id="chat" class="bg-gray-100 h-screen overflow-hidden">
+  <div class="grid grid-cols-1 md:grid-cols-3 h-full">
+    <!-- Sidebar -->
+    <div class="bg-white border-r border-gray-300 md:col-span-1 h-full md:block hidden">
+      <div class="flex flex-col items-center py-6 h-full">
+        <div class="p-3 rounded-full mb-6">
+          <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20">
+        </div>
+        <h1 class="text-xl font-semibold mb-6">Discussions</h1>
+        <div class="w-full px-6 mb-6">
+          <input type="text" placeholder="Recherche" class="w-full px-4 py-2 border rounded-lg">
+        </div>
+        <div class="w-full px-6 flex-1 overflow-y-auto">
+          <div class="flex items-center mb-4">
+            <img src="https://via.placeholder.com/40" alt="Olivier Cazamajou" class="w-10 h-10 rounded-full mr-4">
+            <div>
+              <h2 class="font-semibold">Olivier Cazamajou</h2>
+              <p class="text-gray-600">Yo la team t’es arrivé ?</p>
+              <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
+            </div>
+          </div>
+          <div class="flex items-center mb-4">
+            <img src="https://via.placeholder.com/40" alt="Agustin Quintero" class="w-10 h-10 rounded-full mr-4">
+            <div>
+              <h2 class="font-semibold">Agustin Quintero</h2>
+              <p class="text-gray-600">Coucou ma vie ...</p>
+              <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
+            </div>
+          </div>
+          <!-- Add more contact entries as needed -->
+        </div>
+      </div>
+    </div>
+    <!-- Chat Section -->
+    <div class="col-span-2 flex flex-col md:col-span-2 h-full">
+      <!-- Header -->
+      <div class="bg-green-500 p-6 flex items-center justify-between">
+        <div class="flex items-center">
+          <img src="https://via.placeholder.com/50" alt="John Doe" class="w-12 h-12 rounded-full mr-4">
+          <h2 class="text-white text-xl font-semibold">John Doe</h2>
+        </div>
+        <!-- Burger Menu for Mobile -->
+        <div class="md:hidden">
+          <button id="burgerMenu" class="text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M3 5h14a1 1 0 110 2H3a1 1 0 110-2zm0 4h14a1 1 0 110 2H3a1 1 0 110-2zm0 4h14a1 1 0 110 2H3a1 1 0 110-2z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Sidebar -->
+      <div id="mobileSidebar" class="bg-white border-r border-gray-300 md:hidden fixed inset-y-0 left-0 w-64 transform -translate-x-full transition-transform duration-200 ease-in-out">
+        <div class="flex flex-col items-center py-6 h-full">
+          <div class="bg-green-500 p-3 rounded-full mb-6">
+            <img src="logo.png" alt="Logo" class="w-16 h-16">
+          </div>
+          <h1 class="text-xl font-semibold mb-6">Discussions</h1>
+          <div class="w-full px-6 mb-6">
+            <input type="text" placeholder="Recherche" class="w-full px-4 py-2 border rounded-lg">
+          </div>
+          <div class="w-full px-6 flex-1 overflow-y-auto">
+            <div class="flex items-center mb-4">
+              <img src="https://via.placeholder.com/40" alt="Olivier Cazamajou" class="w-10 h-10 rounded-full mr-4">
+              <div>
+                <h2 class="font-semibold">Olivier Cazamajou</h2>
+                <p class="text-gray-600">Yo la team t’es arrivé ?</p>
+                <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
+              </div>
+            </div>
+            <div class="flex items-center mb-4">
+              <img src="https://via.placeholder.com/40" alt="Agustin Quintero" class="w-10 h-10 rounded-full mr-4">
+              <div>
+                <h2 class="font-semibold">Agustin Quintero</h2>
+                <p class="text-gray-600">Coucou ma vie ...</p>
+                <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
+              </div>
+            </div>
+            <!-- Add more contact entries as needed -->
+          </div>
+        </div>
+      </div>
+      <!-- Chat Messages -->
+      <div class="flex-1 p-6 bg-white overflow-y-auto">
+        <div class="min-h-[55vh] max-h-[55vh]">
+          <div class="mb-4">
+            <p class="bg-gray-200 p-4 rounded-lg w-max">Hello John, how are you?</p>
+            <span class="text-gray-500 text-sm">9:41 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">I'm good, thanks! How about you?</p>
+            <span class="text-gray-500 text-sm ml-auto">9:42 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-gray-200 p-4 rounded-lg w-max">Doing well, just working on some projects.</p>
+            <span class="text-gray-500 text-sm">9:43 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">That's great to hear! Need any help?</p>
+            <span class="text-gray-500 text-sm ml-auto">9:44 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-gray-200 p-4 rounded-lg w-max">Maybe later, but thanks for offering!</p>
+            <span class="text-gray-500 text-sm">9:45 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">Sure, just let me know.</p>
+            <span class="text-gray-500 text-sm ml-auto">9:46 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-gray-200 p-4 rounded-lg w-max">Will do. Talk to you later!</p>
+            <span class="text-gray-500 text-sm">9:47 AM</span>
+          </div>
+          <div class="mb-4">
+            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">Bye!</p>
+            <span class="text-gray-500 text-sm ml-auto">9:48 AM</span>
+          </div>
+        </div>
+        <!-- Add more chat messages as needed -->
+      </div>
+      <!-- Input Box -->
+      <div class="bg-gray-100 p-4 flex items-center">
+        <input type="text" placeholder="Type a message" class="flex-1 px-4 py-2 border rounded-lg">
+        <button class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('burgerMenu').addEventListener('click', function() {
+      const sidebar = document.getElementById('mobileSidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    });
+  </script>
 </div>
+
+
+
+
 {% endblock %}
