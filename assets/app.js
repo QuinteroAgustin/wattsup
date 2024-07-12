@@ -1,11 +1,8 @@
-import { registerVueControllerComponents } from '@symfony/ux-vue';
-import './bootstrap.js';
 /*
  * Welcome to your app's main JavaScript file!
  *
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
+import './bootstrap.js';
 import './styles/app.css';
-
-registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
