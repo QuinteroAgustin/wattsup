@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}Accueil{% endblock %}
 {% block body %}
-
 <div class="flex items-center justify-center h-screen bg-white">
   <div class="flex flex-wrap place-content-around items-center w-full">
     <div class="flex flex-col items-center">
@@ -11,7 +10,7 @@
       <p class="mt-2 text-gray-600">Message d'application de l'application</p>
     </div>
     <div class="flex flex-col items-center">
-      <h1 class="text-4xl font-bold mb-16">WattSup</h1>
+      <h1 class="text-4xl font-bold mb-16">WattSupp</h1>
       <div class="mt-4 space-x-4">
         <a href="{{ path('app_login') }}" class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-700">Connexion</a>
         <a href="{{ path('app_register') }}" class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-700">Inscription</a>
@@ -19,7 +18,4 @@
     </div>
   </div>
 </div>
-
-
-
 {% endblock %}
