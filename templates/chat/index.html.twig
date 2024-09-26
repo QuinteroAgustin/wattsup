@@ -6,6 +6,7 @@
     <!-- Sidebar -->
     <div class="bg-white border-r border-gray-300 md:col-span-1 h-full md:block hidden">
       <div class="flex flex-col items-center py-6 h-full">
+        <!-- Nom profil, btn deconnexion -->
         <div class="inline-flex items-center justify-between w-full">
           <div class="ml-4">
             
@@ -19,31 +20,38 @@
             </a>
           </div>
         </div>
+        <!-- LOGO -->
         <div class="p-3 rounded-full mb-6">
           <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20">
         </div>
+
         <h1 class="text-xl font-semibold mb-6">Discussions</h1>
+
+        <!-- Champ de recherche -->
         <div class="w-full px-6 mb-6">
-          <input type="text" placeholder="Recherche" class="w-full px-4 py-2 border rounded-lg">
+            <input type="text" placeholder="Recherche" class="w-full px-4 py-2 border rounded-lg">
         </div>
+
+        <!-- Liste des commissions -->
         <div class="w-full px-6 flex-1 overflow-y-auto">
-          <div class="flex items-center mb-4">
-            <img src="https://via.placeholder.com/40" alt="Olivier Cazamajou" class="w-10 h-10 rounded-full mr-4">
-            <div>
-              <h2 class="font-semibold">Olivier Cazamajou</h2>
-              <p class="text-gray-600">Yo la team t’es arrivé ?</p>
-              <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
-            </div>
-          </div>
-          <div class="flex items-center mb-4">
-            <img src="https://via.placeholder.com/40" alt="Agustin Quintero" class="w-10 h-10 rounded-full mr-4">
-            <div>
-              <h2 class="font-semibold">Agustin Quintero</h2>
-              <p class="text-gray-600">Coucou ma vie ...</p>
-              <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
-            </div>
-          </div>
-          <!-- Add more contact entries as needed -->
+            {% for commission in commissions %}
+              <div class="flex items-center mb-4">
+                <img src="https://via.placeholder.com/40" alt="{{ commission.name }}" class="w-10 h-10 rounded-full mr-4">
+                <div>
+                  <h2 class="font-semibold">{{ commission.name }}</h2>
+                  <p class="text-gray-600 text-sm">
+                    <!-- Affiche ici la date de création de la commission -->
+                    Créée le {{ commission.createdAt|date('d M Y H:i') }}
+                  </p>
+                  <p class="text-gray-600 text-sm">
+                    <!-- Ajout d'un lien pour afficher les messages de la commission -->
+                    <a href="{{ path('app_chat', {'commissionId': commission.id}) }}" class="text-blue-500">Voir les messages</a>
+                  </p>
+                </div>
+              </div>
+            {% else %}
+              <p class="text-gray-600">Aucune commission n'a encore été créée.</p>
+            {% endfor %}
         </div>
       </div>
     </div>
@@ -69,14 +77,19 @@
         <div class="flex flex-col items-center py-6 h-full">
           <div class="inline-flex items-center justify-between w-full">
             <div class="ml-4">
-              a
+            
             </div>
             <div class="mr-4">
-              a
+              <a href="{{ path('app_logout') }}" class="border font-bold py-2 px-4 rounded-full flex items-center">
+                <!-- Icone SVG de déconnexion -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H7a3 3 0 01-3-3V7a3 3 0 013-3h3a3 3 0 013 3v1"/>
+                </svg>
+              </a>
             </div>
           </div>
           <div class="bg-green-500 p-3 rounded-full mb-6">
-            <img src="logo.png" alt="Logo" class="w-16 h-16">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-16 h-16">
           </div>
           <!-- Liste des disscussions -->
           <h1 class="text-xl font-semibold mb-6">Discussions</h1>
@@ -84,68 +97,50 @@
             <input type="text" placeholder="Recherche" class="w-full px-4 py-2 border rounded-lg">
           </div>
           <div class="w-full px-6 flex-1 overflow-y-auto">
-            <div class="flex items-center mb-4">
-              <img src="https://via.placeholder.com/40" alt="Olivier Cazamajou" class="w-10 h-10 rounded-full mr-4">
-              <div>
-                <h2 class="font-semibold">Olivier Cazamajou</h2>
-                <p class="text-gray-600">Yo la team t’es arrivé ?</p>
-                <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
+            {% for commission in commissions %}
+              <div class="flex items-center mb-4">
+                <img src="https://via.placeholder.com/40" alt="{{ commission.name }}" class="w-10 h-10 rounded-full mr-4">
+                <div>
+                  <h2 class="font-semibold">{{ commission.name }}</h2>
+                  <p class="text-gray-600 text-sm">Créée le {{ commission.createdAt|date('d M Y H:i') }}</p>
+                  <p class="text-gray-600 text-sm"><a href="{{ path('app_chat', {'commissionId': commission.id}) }}" class="text-blue-500">Voir les messages</a></p>
+                </div>
               </div>
-            </div>
-            <div class="flex items-center mb-4">
-              <img src="https://via.placeholder.com/40" alt="Agustin Quintero" class="w-10 h-10 rounded-full mr-4">
-              <div>
-                <h2 class="font-semibold">Agustin Quintero</h2>
-                <p class="text-gray-600">Coucou ma vie ...</p>
-                <p class="text-gray-600 text-sm">Jun 10, 2024 9:41 AM</p>
-              </div>
-            </div>
+            {% else %}
+              <p class="text-gray-600">Aucune commission n'a encore été créée.</p>
+            {% endfor %}
           </div>
         </div>
       </div>
       <!-- Chat Messages -->
       <div class="flex-1 p-6 bg-white overflow-y-auto">
         <div class="min-h-[55vh] max-h-[55vh]">
-          <div class="mb-4">
-            <p class="bg-gray-200 p-4 rounded-lg w-max">Hello John, how are you?</p>
-            <span class="text-gray-500 text-sm">9:41 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">I'm good, thanks! How about you?</p>
-            <span class="text-gray-500 text-sm ml-auto">9:42 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-gray-200 p-4 rounded-lg w-max">Doing well, just working on some projects.</p>
-            <span class="text-gray-500 text-sm">9:43 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">That's great to hear! Need any help?</p>
-            <span class="text-gray-500 text-sm ml-auto">9:44 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-gray-200 p-4 rounded-lg w-max">Maybe later, but thanks for offering!</p>
-            <span class="text-gray-500 text-sm">9:45 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">Sure, just let me know.</p>
-            <span class="text-gray-500 text-sm ml-auto">9:46 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-gray-200 p-4 rounded-lg w-max">Will do. Talk to you later!</p>
-            <span class="text-gray-500 text-sm">9:47 AM</span>
-          </div>
-          <div class="mb-4">
-            <p class="bg-blue-500 text-white p-4 rounded-lg w-max ml-auto">Bye!</p>
-            <span class="text-gray-500 text-sm ml-auto">9:48 AM</span>
-          </div>
+          {% if messages is empty %}
+            <p class="text-gray-600">Il n'y a pas de messages dans cette commission.</p>
+          {% else %}
+            {% for message in messages %}
+              <div class="mb-4 w-max {% if message.user.id == app.user.id %}ml-auto{% endif %} flex flex-col">
+                <h3 class="font-semibold {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
+                  {{ message.user.nom }} {{ message.user.prenom }}
+                </h3>
+                <p class="{% if message.user.id == app.user.id %}bg-blue-500 text-white{% else %}bg-gray-200{% endif %} p-4 rounded-lg text-left">
+                  {{ message.text }}
+                </p>
+                <span class="text-gray-500 text-sm {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
+                  {{ message.createdAt|date('H:i A') }}
+                </span>
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
-        <!-- Add more chat messages as needed -->
       </div>
       <!-- Input Box -->
-      <div class="bg-gray-100 p-4 flex items-center">
-        <input type="text" placeholder="Type a message" class="flex-1 px-4 py-2 border rounded-lg">
-        <button class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg">Send</button>
-      </div>
+      <form method="post" action="{{ path('app_chat_send', { 'commissionId': current_commission_id }) }}">
+        <div class="bg-gray-100 p-4 flex items-center">
+            <input type="text" name="message" placeholder="Écrivez votre message ici..." class="flex-1 px-4 py-2 border rounded-lg">
+            <button type="submit" class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg">Envoyer</button>
+        </div>
+      </form>
     </div>
   </div>
 
