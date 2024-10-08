@@ -58,7 +58,8 @@ class ChatController extends AbstractController
         $commission = $commissionRepository->find($commissionId);
 
         $messageText = $request->request->get('message');
-    
+        
+
         if (!empty($messageText)) {
             // Vérifie si le champ 'name' de la commission est bien défini
             if (!$commission->getName()) {
@@ -70,7 +71,7 @@ class ChatController extends AbstractController
             $message->setCreatedAt(new \DateTime());
             $message->setUser($this->getUser());
             $message->setCommission($commission);
-    
+            
             $entityManager->persist($message);
             $entityManager->flush();
         }
