@@ -9,6 +9,8 @@ use App\Repository\CommissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -46,36 +48,46 @@ class ChatController extends AbstractController
         ]);
     }
 
-    #[Route('/chat/send/{commissionId}', name: 'app_chat_send', methods: ['POST'])]
-    public function sendMessage(
-        Request $request, 
-        CommissionRepository $commissionRepository,  
-        EntityManagerInterface $entityManager,
-        int $commissionId
-        ): Response
-    {
-        // Récupération de la commission sélectionnée (par défaut, celle avec id = 1)
-        $commission = $commissionRepository->find($commissionId);
+#[Route('/chat/send/{commissionId}', name: 'app_chat_send', methods: ['POST'])]
+public function sendMessage(
+    Request $request, 
+    CommissionRepository $commissionRepository,  
+    EntityManagerInterface $entityManager,
+    HubInterface $hub,  // Ajout du Hub Mercure
+    int $commissionId
+): Response {
+    $commission = $commissionRepository->find($commissionId);
+    $messageText = $request->request->get('message');
 
-        $messageText = $request->request->get('message');
-        
-
-        if (!empty($messageText)) {
-            // Vérifie si le champ 'name' de la commission est bien défini
-            if (!$commission->getName()) {
-                throw new \Exception('La commission doit avoir un nom.');
-            }
-    
-            $message = new Message();
-            $message->setText($messageText);
-            $message->setCreatedAt(new \DateTime());
-            $message->setUser($this->getUser());
-            $message->setCommission($commission);
-            
-            $entityManager->persist($message);
-            $entityManager->flush();
+    if (!empty($messageText)) {
+        if (!$commission->getName()) {
+            throw new \Exception('La commission doit avoir un nom.');
         }
-    
-        return $this->redirectToRoute('app_chat', ['commissionId' => $commission->getId()]);
+ 
+        $message = new Message();
+        $message->setText($messageText);
+        $message->setCreatedAt(new \DateTime());
+        $message->setUser($this->getUser());
+        $message->setCommission($commission);
+        
+        $entityManager->persist($message);
+        $entityManager->flush();
+
+        // Publier sur Mercure
+        $update = new Update(
+            'https://localhost/chat/' . $commissionId,  // Le topic à écouter
+            json_encode([
+                'user' => [
+                    'id' => $this->getUser()->getId(),
+                    'name' => $this->getUser()->getNom(),
+                ],
+                'message' => $message->getText(),
+                'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
+            ])
+        );
+        $hub->publish($update);  // Envoi de la mise à jour au Hub Mercure
     }
+
+    return $this->redirectToRoute('app_chat', ['commissionId' => $commission->getId()]);
+}
 }

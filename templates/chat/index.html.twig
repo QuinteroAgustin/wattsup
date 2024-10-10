@@ -113,27 +113,59 @@
         </div>
       </div>
       <!-- Chat Messages -->
-      <div class="flex-1 p-6 bg-white overflow-y-auto">
-        <div class="min-h-[55vh] max-h-[55vh]">
-          {% if messages is empty %}
-            <p class="text-gray-600">Il n'y a pas de messages dans cette commission.</p>
-          {% else %}
-            {% for message in messages %}
-              <div class="mb-4 w-max {% if message.user.id == app.user.id %}ml-auto{% endif %} flex flex-col">
-                <h3 class="font-semibold {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
-                  {{ message.user.nom }} {{ message.user.prenom }}
-                </h3>
-                <p class="{% if message.user.id == app.user.id %}bg-blue-500 text-white{% else %}bg-gray-200{% endif %} p-4 rounded-lg text-left">
-                  {{ message.text }}
-                </p>
-                <span class="text-gray-500 text-sm {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
-                  {{ message.createdAt|date('H:i A') }}
-                </span>
-              </div>
-            {% endfor %}
-          {% endif %}
-        </div>
+      <div class="flex-1 p-6 bg-white overflow-y-auto" id="messages-container">
+          <div class="min-h-[55vh] max-h-[55vh]">
+              {% if messages is empty %}
+                  <p class="text-gray-600">Il n'y a pas de messages dans cette commission.</p>
+              {% else %}
+                  {% for message in messages %}
+                      <div class="mb-4 w-max {% if message.user.id == app.user.id %}ml-auto{% endif %} flex flex-col">
+                          <h3 class="font-semibold {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
+                              {{ message.user.nom }} {{ message.user.prenom }}
+                          </h3>
+                          <p class="{% if message.user.id == app.user.id %}bg-blue-500 text-white{% else %}bg-gray-200{% endif %} p-4 rounded-lg text-left">
+                              {{ message.text }}
+                          </p>
+                          <span class="text-gray-500 text-sm {% if message.user.id == app.user.id %}text-right{% else %}text-left{% endif %}">
+                              {{ message.createdAt|date('H:i A', 'Europe/Paris') }}
+                          </span>
+                      </div>
+                  {% endfor %}
+              {% endif %}
+          </div>
       </div>
+
+      <script type="module">
+        const commissionId = {{ current_commission_id|json_encode }};
+
+        const url = new URL('https://localhost/.well-known/mercure'); 
+        url.searchParams.append('topic', 'https://localhost/chat/' + commissionId); 
+
+        const eventSource = new EventSource(url, {
+            headers: {
+                'Authorization': 'Bearer ' + '!ChangeThisMercureHubJWTSecretKey!'
+            }
+        });
+
+        eventSource.onmessage = function (event) {
+          
+            Turbo.visit(window.location.href);
+        };
+
+        eventSource.onerror = function () {
+            console.error("Erreur lors de la connexion à Mercure");
+        };
+      </script>
+
+      <script>
+          function scrollToBottom() {
+              const container = document.getElementById('messages-container');
+              container.scrollTop = container.scrollHeight;
+          }
+
+          // Défilement initial lors du chargement de la page
+          document.addEventListener("turbo:load", scrollToBottom);
+      </script>
       <!-- Input Box -->
       <form method="post" action="{{ path('app_chat_send', { 'commissionId': current_commission_id }) }}">
         <div class="bg-gray-100 p-4 flex items-center">
