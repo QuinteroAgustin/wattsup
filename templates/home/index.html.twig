@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block title %}Accueil{% endblock %}
 {% block body %}
-<div class="flex items-center justify-center h-screen bg-white">
+<style>
+  .bg-gradient {
+    background: linear-gradient(to bottom, #22C55E, #ffffff); /* bg-green-500 to white */
+  }
+</style>
+<div class="flex items-center justify-center h-screen bg-gradient">
   <div class="flex flex-wrap place-content-around items-center w-full">
     <div class="flex flex-col items-center">
       <div class="rounded-full flex items-center justify-center">
         <img class="mx-auto" style="width:50%" src="{{ asset('images/logo.png') }}" alt="logo">
       </div>
-      <p class="mt-2 text-gray-600">Message d'application de l'application</p>
+      <p class="mt-2 text-gray-600">Messagerie d'application</p>
     </div>
     <div class="flex flex-col items-center">
       <h1 class="text-4xl font-bold mb-16">WattSup</h1>
