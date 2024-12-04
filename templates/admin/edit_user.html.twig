@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Utilisateur{% endblock %}
+
+{% block body %}
+<div class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-2xl font-semibold mb-6">Modifier l'utilisateur</h1>
+
+    <form method="post" action="{{ path('app_admin_edit_user', { id: user.id }) }}" class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+            <input type="text" name="nom" id="nom" value="{{ user.nom }}" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+            <input type="text" name="prenom" id="prenom" value="{{ user.prenom }}" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+            <input type="text" name="email" id="email" value="{{ user.email }}" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
+            <select name="role" id="role" class="w-full px-4 py-2 border rounded-lg">
+                <option value="ROLE_MEMBRE" {% if 'ROLE_MEMBRE' in user.roles %}selected{% endif %}>Membre</option>
+                <option value="ROLE_MODERATEUR" {% if 'ROLE_MODERATEUR' in user.roles %}selected{% endif %}>Modérateur</option>
+                <option value="ROLE_ADMINISTRATEUR" {% if 'ROLE_ADMINISTRATEUR' in user.roles %}selected{% endif %}>Administrateur</option>
+            </select>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <a href="{{ path('app_admin_users') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-200">Annuler</a>
+            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-400">Enregistrer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

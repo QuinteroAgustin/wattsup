@@ -16,16 +16,19 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    public function countUnreadMessages(int $commissionId, int $userId): int
+    public function findUnreadMessagesByUserAndCommission($userId, $commissionId)
     {
         return $this->createQueryBuilder('m')
-            ->select('COUNT(m.id)')
-            ->where('m.commission = :commissionId')
-            ->andWhere('m.user != :userId') // Messages envoyés par d'autres utilisateurs
-            ->andWhere('m.isRead = false') // Non lus
-            ->setParameter('commissionId', $commissionId)
-            ->setParameter('userId', $userId)
+            ->innerJoin('App\Entity\MessageReadStatus', 'mrs', 'WITH', 'mrs.message = m.id')
+            ->andWhere('mrs.user = :user')
+            ->andWhere('mrs.commission = :commission')
+            ->andWhere('mrs.isRead = false')
+            ->setParameters([
+                'user' => $userId,
+                'commission' => $commissionId,
+            ])
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
     }
+    
 }

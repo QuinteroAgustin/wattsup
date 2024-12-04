@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Message;
-use App\Entity\Commission;
+use App\Entity\MessageReadStatus;
 use App\Repository\MessageRepository;
+use App\Repository\MessageReadStatusRepository;
 use App\Repository\CommissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -18,13 +21,14 @@ class ChatController extends AbstractController
 {
     #[Route('/chat/{commissionId?1}', name: 'app_chat')]
     public function index(
-        CommissionRepository $commissionRepository, 
-        MessageRepository $messageRepository, 
+        CommissionRepository $commissionRepository,
+        MessageRepository $messageRepository,
+        MessageReadStatusRepository $readStatusRepository,
         int $commissionId = 1
     ): Response {
         $user = $this->getUser();
-    
         $commission = $commissionRepository->find($commissionId);
+    
         if (!$commission) {
             $messages = [];
             $commissionName = "Aucune commission trouvée";
@@ -37,10 +41,9 @@ class ChatController extends AbstractController
     
         $commissions = $commissionRepository->findAll();
     
-        // Ajout des notifications (messages non lus)
         $notifications = [];
         foreach ($commissions as $comm) {
-            $notifications[$comm->getId()] = $messageRepository->countUnreadMessages($comm->getId(), $user->getId());
+            $notifications[$comm->getId()] = $readStatusRepository->countUnreadMessages($comm, $user);
         }
     
         return $this->render('chat/index.html.twig', [
@@ -50,11 +53,54 @@ class ChatController extends AbstractController
             'currentCommission' => $commissionName,
             'current_commission_id' => $commission ? $commission->getId() : null,
             'isClosed' => $isClosed,
-            'notifications' => $notifications, // Passer les notifications au template
+            'notifications' => $notifications,
         ]);
     }
-    
-    
+
+    #[Route('/message/{id}/read', name: 'mark_message_read', methods: ['POST'])]
+    public function markMessageAsRead(
+        int $id,
+        EntityManagerInterface $entityManager,
+        MessageRepository $messageRepository,
+        MessageReadStatusRepository $readStatusRepository,
+        ValidatorInterface $validator
+    ): JsonResponse {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $message = $messageRepository->find($id);
+        if (!$message) {
+            return $this->json(['error' => 'Message not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $readStatus = $readStatusRepository->findOneBy([
+            'message' => $message,
+            'user' => $user,
+        ]);
+
+        if (!$readStatus) {
+            $readStatus = new MessageReadStatus();
+            $readStatus->setMessage($message);
+            $readStatus->setUser($user);
+            $readStatus->setCommission($message->getCommission());
+        }
+
+        $readStatus->setIsRead(true);
+
+        // Validation de l'entité
+        $errors = $validator->validate($readStatus);
+        if (count($errors) > 0) {
+            return $this->json(['error' => (string) $errors], Response::HTTP_BAD_REQUEST);
+        }
+
+        $entityManager->persist($readStatus);
+        $entityManager->flush();
+
+        return $this->json(['success' => true], Response::HTTP_OK);
+    }
 
     #[Route('/chat/send/{commissionId}', name: 'app_chat_send', methods: ['POST'])]
     public function sendMessage(
@@ -105,4 +151,43 @@ class ChatController extends AbstractController
     
         return $this->redirectToRoute('app_chat', ['commissionId' => $commission->getId()]);
     }    
+
+    #[Route('/messages/mark-as-read', name: 'mark_messages_read', methods: ['POST'])]
+    public function markMessagesAsRead(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MessageRepository $messageRepository,
+        MessageReadStatusRepository $readStatusRepository
+    ): JsonResponse {
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+    
+        if (!isset($data['messageIds']) || !is_array($data['messageIds'])) {
+            return $this->json(['error' => 'Invalid message IDs'], Response::HTTP_BAD_REQUEST);
+        }
+    
+        $messages = $messageRepository->findBy(['id' => $data['messageIds']]);
+    
+        foreach ($messages as $message) {
+            $readStatus = $readStatusRepository->findOneBy([
+                'message' => $message,
+                'user' => $user,
+            ]);
+    
+            if (!$readStatus) {
+                $readStatus = new MessageReadStatus();
+                $readStatus->setMessage($message);
+                $readStatus->setUser($user);
+                $readStatus->setCommission($message->getCommission());
+            }
+    
+            $readStatus->setIsRead(true);
+            $entityManager->persist($readStatus);
+        }
+    
+        $entityManager->flush();
+    
+        return $this->json(['success' => true], Response::HTTP_OK);
+    }
+    
 }

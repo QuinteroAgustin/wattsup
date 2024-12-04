@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Commission{% endblock %}
+
+{% block body %}
+<div class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-2xl font-semibold mb-6">Modifier la commission</h1>
+
+    <form method="post" action="{{ path('app_admin_edit_commission', { id: commission.id }) }}" class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700">Nom de la commission</label>
+            <input type="text" name="name" id="name" value="{{ commission.name }}" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="author" class="block text-sm font-medium text-gray-700">Auteur</label>
+            <select name="author" id="author" class="w-full px-4 py-2 border rounded-lg">
+                <option value="">Système</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}" {% if commission.author and commission.author.id == user.id %}selected{% endif %}>
+                        {{ user.nom }} {{ user.prenom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="created_at" class="block text-sm font-medium text-gray-700">Date de création</label>
+            <input type="date" name="created_at" id="created_at" value="{{ commission.createdAt ? commission.createdAt|date('Y-m-d') : '' }}" class="w-full px-4 py-2 border rounded-lg" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="closed_at" class="block text-sm font-medium text-gray-700">Date de clôture</label>
+            <input type="date" name="closed_at" id="closed_at" value="{{ commission.closedAt ? commission.closedAt|date('Y-m-d') : '' }}" class="w-full px-4 py-2 border rounded-lg">
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <a href="{{ path('app_admin_commissions') }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-300">Annuler</a>
+            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-400">Enregistrer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -2,13 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\MessageRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+use App\Repository\MessageRepository;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-#[Broadcast]
 class Message
 {
     #[ORM\Id]
@@ -16,22 +13,19 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text')]
     private ?string $text = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Commission::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Commission $commission = null;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $isRead = false;
 
     public function getId(): ?int
     {
@@ -43,10 +37,9 @@ class Message
         return $this->text;
     }
 
-    public function setText(string $text): static
+    public function setText(string $text): self
     {
         $this->text = $text;
-
         return $this;
     }
 
@@ -55,10 +48,9 @@ class Message
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -67,10 +59,9 @@ class Message
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -79,22 +70,9 @@ class Message
         return $this->commission;
     }
 
-    public function setCommission(?Commission $commission): static
+    public function setCommission(?Commission $commission): self
     {
         $this->commission = $commission;
-
-        return $this;
-    }
-
-    public function isRead(): bool
-    {
-        return $this->isRead;
-    }
-
-    public function setIsRead(bool $isRead): self
-    {
-        $this->isRead = $isRead;
-
         return $this;
     }
 }

@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+mark_message_read:
+    path: /message/{id}/read
+    controller: App\Controller\ChatController::markMessageAsRead
+    methods: [POST]
+

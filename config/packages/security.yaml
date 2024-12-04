@@ -37,7 +37,9 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/chat, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMINISTRATEUR }
         - { path: ^/chat, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/chat/mark-as-read, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
