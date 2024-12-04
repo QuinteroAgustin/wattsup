@@ -30,6 +30,9 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     private ?Commission $commission = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isRead = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +82,18 @@ class Message
     public function setCommission(?Commission $commission): static
     {
         $this->commission = $commission;
+
+        return $this;
+    }
+
+    public function isRead(): bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): self
+    {
+        $this->isRead = $isRead;
 
         return $this;
     }

@@ -87,7 +87,7 @@ class Commission
     {
         return $this->closedAt;
     }
-
+    
     public function setClosedAt(?\DateTimeInterface $closedAt): static
     {
         $this->closedAt = $closedAt;
@@ -112,13 +112,14 @@ class Commission
         return $this->isTemp;
     }
 
-    public function setTemp(bool $isTemp): static
+    public function setTemp(bool $isTemp, ?\DateTimeInterface $temporaryDate = null): static
     {
         $this->isTemp = $isTemp;
-
+        $this->closedAt = $isTemp ? $temporaryDate : null;
+    
         return $this;
     }
-
+    
     public function getAuthor(): ?User
     {
         return $this->author;

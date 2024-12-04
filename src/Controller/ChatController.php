@@ -21,73 +21,88 @@ class ChatController extends AbstractController
         CommissionRepository $commissionRepository, 
         MessageRepository $messageRepository, 
         int $commissionId = 1
-        ): Response
-    {
-        // Récupération de la commission sélectionnée (par défaut, celle avec id = 1)
+    ): Response {
+        $user = $this->getUser();
+    
         $commission = $commissionRepository->find($commissionId);
-
-        // Si la commission n'existe pas, on affiche un message d'erreur
         if (!$commission) {
             $messages = [];
             $commissionName = "Aucune commission trouvée";
+            $isClosed = true;
         } else {
-            // Récupération des messages liés à la commission
             $messages = $messageRepository->findBy(['commission' => $commission]);
             $commissionName = $commission->getName();
+            $isClosed = $commission->getClosedAt() && $commission->getClosedAt() < new \DateTime();
         }
-
-        // Récupération de toutes les commissions pour le menu latéral
+    
         $commissions = $commissionRepository->findAll();
-
+    
+        // Ajout des notifications (messages non lus)
+        $notifications = [];
+        foreach ($commissions as $comm) {
+            $notifications[$comm->getId()] = $messageRepository->countUnreadMessages($comm->getId(), $user->getId());
+        }
+    
         return $this->render('chat/index.html.twig', [
             'controller_name' => 'ChatController',
             'commissions' => $commissions,
             'messages' => $messages,
             'currentCommission' => $commissionName,
-            'current_commission_id' => $commission ? $commission->getId() : null
+            'current_commission_id' => $commission ? $commission->getId() : null,
+            'isClosed' => $isClosed,
+            'notifications' => $notifications, // Passer les notifications au template
         ]);
     }
+    
+    
 
-#[Route('/chat/send/{commissionId}', name: 'app_chat_send', methods: ['POST'])]
-public function sendMessage(
-    Request $request, 
-    CommissionRepository $commissionRepository,  
-    EntityManagerInterface $entityManager,
-    HubInterface $hub,  // Ajout du Hub Mercure
-    int $commissionId
-): Response {
-    $commission = $commissionRepository->find($commissionId);
-    $messageText = $request->request->get('message');
-
-    if (!empty($messageText)) {
-        if (!$commission->getName()) {
-            throw new \Exception('La commission doit avoir un nom.');
+    #[Route('/chat/send/{commissionId}', name: 'app_chat_send', methods: ['POST'])]
+    public function sendMessage(
+        Request $request, 
+        CommissionRepository $commissionRepository,  
+        EntityManagerInterface $entityManager,
+        HubInterface $hub,  // Ajout du Hub Mercure
+        int $commissionId
+    ): Response {
+        $commission = $commissionRepository->find($commissionId);
+    
+        if (!$commission) {
+            throw $this->createNotFoundException('La commission n\'existe pas.');
         }
- 
-        $message = new Message();
-        $message->setText($messageText);
-        $message->setCreatedAt(new \DateTime());
-        $message->setUser($this->getUser());
-        $message->setCommission($commission);
-        
-        $entityManager->persist($message);
-        $entityManager->flush();
-
-        // Publier sur Mercure
-        $update = new Update(
-            'https://localhost/chat/' . $commissionId,  // Le topic à écouter
-            json_encode([
-                'user' => [
-                    'id' => $this->getUser()->getId(),
-                    'name' => $this->getUser()->getNom(),
-                ],
-                'message' => $message->getText(),
-                'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-            ])
-        );
-        $hub->publish($update);  // Envoi de la mise à jour au Hub Mercure
-    }
-
-    return $this->redirectToRoute('app_chat', ['commissionId' => $commission->getId()]);
-}
+    
+        // Vérifiez si la commission est fermée
+        if ($commission->getClosedAt() && $commission->getClosedAt() < new \DateTime()) {
+            $this->addFlash('error', 'Cette commission est fermée. Vous ne pouvez pas envoyer de messages.');
+            return $this->redirectToRoute('app_chat', ['commissionId' => $commissionId]);
+        }
+    
+        $messageText = $request->request->get('message');
+    
+        if (!empty($messageText)) {
+            $message = new Message();
+            $message->setText($messageText);
+            $message->setCreatedAt(new \DateTime());
+            $message->setUser($this->getUser());
+            $message->setCommission($commission);
+            
+            $entityManager->persist($message);
+            $entityManager->flush();
+    
+            // Publier sur Mercure
+            $update = new Update(
+                'https://localhost/chat/' . $commissionId,  // Le topic à écouter
+                json_encode([
+                    'user' => [
+                        'id' => $this->getUser()->getId(),
+                        'name' => $this->getUser()->getNom(),
+                    ],
+                    'message' => $message->getText(),
+                    'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
+                ])
+            );
+            $hub->publish($update);  // Envoi de la mise à jour au Hub Mercure
+        }
+    
+        return $this->redirectToRoute('app_chat', ['commissionId' => $commission->getId()]);
+    }    
 }

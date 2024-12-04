@@ -25,6 +25,38 @@
           <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20">
         </div>
 
+        <div class="w-full px-6 mb-6">
+            <!-- Bouton pour créer une commission -->
+            <button id="createCommissionBtn" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-400">
+                Créer une commission
+            </button>
+        </div>
+
+        <!-- Modal pour le formulaire de création -->
+        <div id="createCommissionModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
+            <div class="bg-white p-6 rounded-lg w-1/2">
+                <h2 class="text-xl font-bold mb-4">Créer une nouvelle commission</h2>
+                <form id="createCommissionForm" method="post" action="{{ path('app_create_commission') }}">
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nom de la commission</label>
+                        <input type="text" name="name" id="name" class="w-full px-4 py-2 border rounded-lg" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="temporaryDate" class="block text-sm font-medium text-gray-700">
+                            Date de fermeture (optionnelle)
+                        </label>
+                        <input type="datetime-local" name="temporaryDate" id="temporaryDate" class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" id="closeModalBtn" class="mr-2 px-4 py-2 text-gray-700">Annuler</button>
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-400">
+                            Créer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <h1 class="text-xl font-semibold mb-6">Discussions</h1>
 
         <!-- Champ de recherche -->
@@ -35,22 +67,27 @@
         <!-- Liste des commissions -->
         <div class="w-full px-6 flex-1 overflow-y-auto">
             {% for commission in commissions %}
-              <div class="commission-item flex items-center mb-4">
-                <img src="https://via.placeholder.com/40" alt="{{ commission.name }}" class="w-10 h-10 rounded-full mr-4">
-                <div>
-                  <h2 class="font-semibold">{{ commission.name }}</h2>
-                  <p class="text-gray-600 text-sm">
-                    <!-- Affiche ici la date de création de la commission -->
-                    Créée le {{ commission.createdAt|date('d M Y H:i') }}
-                  </p>
-                  <p class="text-gray-600 text-sm">
-                    <!-- Ajout d'un lien pour afficher les messages de la commission -->
-                    <a href="{{ path('app_chat', {'commissionId': commission.id}) }}" class="text-blue-500">Voir les messages</a>
-                  </p>
+                <div class="commission-item flex items-center mb-4">
+                    <img src="https://via.placeholder.com/40" alt="{{ commission.name }}" class="w-10 h-10 rounded-full mr-4">
+                    <div>
+                        <h2 class="font-semibold">
+                            {{ commission.name }}
+                            {% if notifications[commission.id] > 0 %}
+                                <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-2">
+                                    {{ notifications[commission.id] }}
+                                </span>
+                            {% endif %}
+                        </h2>
+                        <p class="text-gray-600 text-sm">
+                            Créée le {{ commission.createdAt|date('d M Y H:i') }}
+                        </p>
+                        <p class="text-gray-600 text-sm">
+                            <a href="{{ path('app_chat', {'commissionId': commission.id}) }}" class="text-blue-500">Voir les messages</a>
+                        </p>
+                    </div>
                 </div>
-              </div>
             {% else %}
-              <p class="text-gray-600">Aucune commission n'a encore été créée.</p>
+                <p class="text-gray-600">Aucune commission n'a encore été créée.</p>
             {% endfor %}
         </div>
       </div>
@@ -138,7 +175,7 @@
       <script type="module">
         const commissionId = {{ current_commission_id|json_encode }};
 
-        const url = new URL('https://localhost/.well-known/mercure'); 
+        const url = new URL('http://localhost:3000/.well-known/mercure'); 
         url.searchParams.append('topic', 'https://localhost/chat/' + commissionId); 
 
         const eventSource = new EventSource(url, {
@@ -158,21 +195,36 @@
       </script>
 
       <script>
-          function scrollToBottom() {
-              const container = document.getElementById('messages-container');
-              container.scrollTop = container.scrollHeight;
-          }
+        document.getElementById('createCommissionBtn').addEventListener('click', () => {
+            document.getElementById('createCommissionModal').classList.remove('hidden');
+        });
 
-          // Défilement initial lors du chargement de la page
-          document.addEventListener("turbo:load", scrollToBottom);
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+            document.getElementById('createCommissionModal').classList.add('hidden');
+        });
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Défilement initial lors du chargement de la page
+        document.addEventListener("turbo:load", scrollToBottom);
       </script>
       <!-- Input Box -->
-      <form method="post" action="{{ path('app_chat_send', { 'commissionId': current_commission_id }) }}">
-        <div class="bg-gray-100 p-4 flex items-center">
-            <input type="text" name="message" placeholder="Écrivez votre message ici..." class="flex-1 px-4 py-2 border rounded-lg">
-            <button type="submit" class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg">Envoyer</button>
-        </div>
-      </form>
+      {% if isClosed %}
+          <div class="bg-red-100 text-red-600 p-4 rounded-lg">
+              Cette commission est fermée. Vous ne pouvez pas envoyer de messages, mais vous pouvez consulter l'historique.
+          </div>
+      {% else %}
+          <!-- Input Box -->
+          <form method="post" action="{{ path('app_chat_send', { 'commissionId': current_commission_id }) }}">
+              <div class="bg-gray-100 p-4 flex items-center">
+                  <input type="text" name="message" placeholder="Écrivez votre message ici..." class="flex-1 px-4 py-2 border rounded-lg">
+                  <button type="submit" class="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg">Envoyer</button>
+              </div>
+          </form>
+      {% endif %}
     </div>
   </div>
 

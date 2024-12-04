@@ -16,28 +16,16 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    //    /**
-    //     * @return Message[] Returns an array of Message objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Message
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function countUnreadMessages(int $commissionId, int $userId): int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->where('m.commission = :commissionId')
+            ->andWhere('m.user != :userId') // Messages envoyés par d'autres utilisateurs
+            ->andWhere('m.isRead = false') // Non lus
+            ->setParameter('commissionId', $commissionId)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
