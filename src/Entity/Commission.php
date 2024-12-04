@@ -31,7 +31,7 @@ class Commission
     private ?bool $isClosed = null;
 
     #[ORM\Column]
-    private ?bool $isTemp = null;
+    private ?bool $isTemp = false;
 
     #[ORM\ManyToOne(inversedBy: 'commissions')]
     private ?User $author = null;
