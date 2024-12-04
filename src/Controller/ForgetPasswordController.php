@@ -54,10 +54,10 @@ class ForgetPasswordController extends AbstractController
 
                 // Send email
                 $email = (new Email())
-                    ->from('noreply@yourdomain.com')
+                    ->from('noreply@agweco.fr')
                     ->to($forgetPasswordRequest->email)
                     ->subject('Password Reset Request')
-                    ->html('<p>Click the link to reset your password: <a href="' . $this->generateUrl('app_reset_password', ['token' => $forgetPassword->getToken()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Reset Password</a></p>');
+                    ->html('<h1>WattSup</h1><br><p>Réinitialiser votre mot de passe ici : <a href="' . $this->generateUrl('app_reset_password', ['token' => $forgetPassword->getToken()], UrlGeneratorInterface::ABSOLUTE_URL) . '">Réinitialiser</a></p><br><p>Bien a vous l\'équipe de WattSup</p>');
                     //->html('<p>Click the link to reset your password: <a href="#">Reset Password</a></p>');
 
                 $mailer->send($email);
