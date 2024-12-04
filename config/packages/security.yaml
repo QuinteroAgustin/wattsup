@@ -38,8 +38,10 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/chat, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADMINISTRATEUR }
+        - { path: ^/commission/create, roles: [ROLE_ADMINISTRATEUR, ROLE_MODERATEUR] }
         - { path: ^/chat, roles: IS_AUTHENTICATED_FULLY  }
         - { path: ^/chat/mark-as-read, roles: IS_AUTHENTICATED_FULLY }
+        
 
 when@test:
     security:

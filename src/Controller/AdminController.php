@@ -57,7 +57,7 @@ class AdminController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Utilisateur modifié avec succès.');
-            return $this->redirectToRoute('app_admin');
+            return $this->redirectToRoute('app_admin_users');
         }
 
         return $this->render('admin/edit_user.html.twig', [
@@ -70,25 +70,30 @@ class AdminController extends AbstractController
         int $id, 
         UserRepository $userRepository, 
         EntityManagerInterface $entityManager,
+        MessageRepository $messageRepository,
         Request $request
     ): Response {
         // Récupérer l'utilisateur à partir de l'ID
         $user = $userRepository->find($id);
         
-        // Si l'utilisateur n'existe pas, rediriger vers la liste avec un message d'erreur
         if (!$user) {
             $this->addFlash('error', 'Utilisateur non trouvé.');
             return $this->redirectToRoute('app_admin');
         }
     
-        // Suppression de l'utilisateur
+        // Supprimer les messages associés
+        $messages = $messageRepository->findBy(['user' => $user]);
+        foreach ($messages as $message) {
+            $entityManager->remove($message);
+        }
+    
+        // Supprimer l'utilisateur
         $entityManager->remove($user);
         $entityManager->flush();
         
-        // Message de succès
         $this->addFlash('success', 'Utilisateur supprimé avec succès.');
         
-        return $this->redirectToRoute('app_admin');
+        return $this->redirectToRoute('app_admin_users');
     }
     
     
