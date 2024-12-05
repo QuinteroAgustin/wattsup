@@ -24,3 +24,7 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Entity\Commission:
         autowire: false
+        
+    App\Security\CustomAccessDeniedHandler:
+        arguments:
+            $router: '@router'
