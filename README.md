@@ -2,7 +2,7 @@
 
 ## 🚀 Introduction
 
-**WattSup** est une application de gestion de tournées pour les vélos électriques dédiés à la collecte des déchets. Elle combine une interface utilisateur intuitive (Frontend) avec une API robuste (Backend), et utilise [OpenRouteService (ORS)](https://openrouteservice.org/) pour calculer les itinéraires optimaux.
+**WattSup** est une application de ressemblant à l'application WhatsApp pour l'association AlHambra.
 
 ---
 
