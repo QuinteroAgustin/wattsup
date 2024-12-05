@@ -162,27 +162,27 @@ class AdminController extends AbstractController
 
     #[Route('/admin/commissions/delete/{id}', name: 'app_admin_delete_commission', methods: ['POST'])]
     public function deleteCommission(
-        int $id, 
-        CommissionRepository $commissionRepository, 
+        int $id,
+        CommissionRepository $commissionRepository,
         EntityManagerInterface $entityManager,
         Request $request
     ): Response {
-        // Récupérer l'utilisateur à partir de l'ID
-        $commissions = $commissionRepository->find($id);
-        
-        // Si l'utilisateur n'existe pas, rediriger vers la liste avec un message d'erreur
-        if (!$commissions) {
-            $this->addFlash('error', 'Commission non trouvé.');
+        // Récupérer la commission à partir de l'ID
+        $commission = $commissionRepository->find($id);
+
+        // Si la commission n'existe pas, rediriger vers la liste avec un message d'erreur
+        if (!$commission) {
+            $this->addFlash('error', 'Commission non trouvée.');
             return $this->redirectToRoute('app_admin_commissions');
         }
-    
-        // Suppression de l'utilisateur
-        $entityManager->remove($commissions);
+
+        // Suppression de la commission (les messages liés seront également supprimés)
+        $entityManager->remove($commission);
         $entityManager->flush();
-        
+
         // Message de succès
-        $this->addFlash('success', 'Commission supprimé avec succès.');
-        
+        $this->addFlash('success', 'Commission supprimée avec succès.');
+
         return $this->redirectToRoute('app_admin_commissions');
     }
 }

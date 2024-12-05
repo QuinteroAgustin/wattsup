@@ -209,7 +209,7 @@
       <script type="module">
         const commissionId = {{ current_commission_id|json_encode }};
 
-        const url = new URL('http://localhost:3000/.well-known/mercure'); 
+        const url = new URL('https://localhost/.well-known/mercure'); 
         url.searchParams.append('topic', 'https://localhost/chat/' + commissionId); 
 
         const eventSource = new EventSource(url, {
