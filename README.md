@@ -52,25 +52,20 @@ WattUp
    git clone git@github.com:QuinteroAgustin/wattsup.git
 
 10. Se placer dans le dossier que git a créer
-   ```bash
    cd wattsup
 
 11. Installer composer dans le dossier
-   ```bash
    composer install
 
 12. Installer NPM
-   ```bash
    npm install --global yarn
    npm i –force
 
 13. Start le serveur (dans deux terminaux)
-   ```bash
    npm run watch
    symfony server:start
 
 14. Installer la BDD (vide)
-   ```bash
    php bin/console make:migration
    php bin/console doctrine:migrations:migrate
 
