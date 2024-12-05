@@ -52,6 +52,7 @@ WattUp
    git clone git@github.com:QuinteroAgustin/wattsup.git
 
 10. Se placer dans le dossier que git a créer
+   ```bash
    cd wattsup
 
 11. Installer composer dans le dossier
@@ -70,11 +71,11 @@ WattUp
 
 14. Installer la BDD (vide)
    ```bash
-   php bin\console make:migration
-   php bin\console doctrine:migrations:migrate
+   php bin/console make:migration
+   php bin/console doctrine:migrations:migrate
 
 15. Installer notre BDD
-   [BASE.sql](https://github.com/QuinteroAgustin/wattsup/blob/master/bdd/base.sql)
+   - [BASE.sql](https://github.com/QuinteroAgustin/wattsup/blob/master/bdd/base.sql)
 
 ---
 
