@@ -80,33 +80,29 @@ WattUp
 
 ### **Frontend**
 
-* Vue.js
-* Vite.js
-* Leaflet (cartographie interactive)
+* Twig
+* Tailwind CSS
+* JS
 
 ### **Backend**
 
-* Node.js
-* Express.js
-* PostgreSQL (Base de données)
+* Php
+* Maria DB
 
 ### **Services Externes**
 
-OpenRouteService pour la génération des itinéraires.
+* Mercure
+* Mail Trap (Hebergeur de serveur de mail (SMTP))
 
 ## 🌟 Contribution
 
 1. Clonez le dépôt : :
    ```bash
-    git clone https://github.com/matteorzl/VeloPoubelle.git
-
-2. Créez une nouvelle branche :
-   ```bash
-    git checkout -b feature-name
-
-3. Proposez vos modifications et ouvrez une pull request (PR).
+    git clone https://github.com/QuinteroAgustin/wattsup.git
 
 
 ## 🔗 Liens utiles
-- [Documentation ORS](https://openrouteservice.org/dev/#/api-docs)
-- [Guide Docker](https://docs.docker.com/)
+- [Symfony](https://symfony.com/download)
+- [Scoop](https://scoop.sh/)
+- [Composer](https://getcomposer.org/download/)
+- [NodeJS](https://nodejs.org/en/download/package-manager/current)
