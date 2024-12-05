@@ -52,8 +52,7 @@ WattUp
    git clone git@github.com:QuinteroAgustin/wattsup.git
 
 10. Se placer dans le dossier que git a créer
-   ```bash
-   cd wattup
+   cd wattsup
 
 11. Installer composer dans le dossier
    ```bash
@@ -79,10 +78,6 @@ WattUp
 
 ---
 
-## 🗺️ Accès au site (ORS)
-
-- Accédez à l'interface à l'adresse suivante : [WattSup](http://localhost:8000)
-
 ## 🛠️ Technologies utilisées
 
 ### **Frontend**
@@ -99,7 +94,7 @@ WattUp
 ### **Services Externes**
 
 * Mercure
-* Mail Trap (Hebergeur de serveur de mail (SMTP))
+* MailTrap (Hebergeur de serveur de mail (SMTP))
 
 ## 🌟 Contribution
 
