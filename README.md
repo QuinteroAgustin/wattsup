@@ -28,7 +28,7 @@ WattUp
 
 ### **Installation et Exécution**
 
-1. Rendez-vous dans le dossier **symfony** :
+1. Rendez-vous dans **symfony** :
    ```bash
    https://symfony.com/download
 
@@ -38,31 +38,49 @@ WattUp
    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
    scoop install symfony-cli
 
-3. Lancez le serveur de développement :
+3. Télécharger mercure :
    ```bash
-   npm run dev
+   https://github.com/dunglas/mercure/releases/download/v0.16.3/mercure_Windows_x86_64.zip
 
+4. Installer mercure (En powershell dans le dossier ou on a Unzip mercure) :
+   ```bash
+   $env:MERCURE_PUBLISHER_JWT_KEY='!ChangeThisMercureHubJWTSecretKey!'; 
+   $env:MERCURE_SUBSCRIBER_JWT_KEY='!ChangeThisMercureHubJWTSecretKey!'; .\mercure.exe run --config dev.Caddyfile
+
+5. Installer au préalable
+   - [Composer](https://getcomposer.org/download/)
+   - [NodeJS](https://nodejs.org/en/download/package-manager/current)
+
+6. Démarer le serveur
+
+7. Ouvrir le projet avec VS Code
+8. Se placer dans le dossier du projet
+9. Faire un 
+   ```bash
+   git clone git@github.com:QuinteroAgustin/wattsup.git
+10. Se placer dans le dossier que git a créer
+   ```bash
+   cd wattup
+11. Installer composer dans le dossier
+   ```bash
+   composer install
+12. Installer NPM
+   ```bash
+   npm install --global yarn
+   npm i –force
+13. Start le serveur (dans deux terminaux)
+   ```bash
+   npm run watch
+   symfony server:start
+14. Installer la BDD (vide)
+   ```bash
+   php bin\console make:migration
+   php bin\console doctrine:migrations:migrate
+15. Installer notre BDD
+   [BASE.sql](https://nodejs.org/en/download/package-manager/current)
 ---
 
-## 🖧 Backend
-
-### **Installation et Exécution**
-
-1. Rendez-vous dans le dossier **backend** :
-   ```bash
-   cd backend
-
-2. Installez les dépendances :
-   ```bash
-   npm install
-
-3. Lancez le serveur de développement :
-   ```bash
-   npm run dev
-
----
-
-## 🗺️ OpenRouteService (ORS)
+## 🗺️ Accès au site (ORS)
 
 ### **Installation et Exécution**
 
