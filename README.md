@@ -1,8 +1,8 @@
-# 🚲 WattUp
+# 🤙 WattSup
 
 ## 🚀 Introduction
 
-**WattUp** est une application de gestion de tournées pour les vélos électriques dédiés à la collecte des déchets. Elle combine une interface utilisateur intuitive (Frontend) avec une API robuste (Backend), et utilise [OpenRouteService (ORS)](https://openrouteservice.org/) pour calculer les itinéraires optimaux.
+**WattSup** est une application de gestion de tournées pour les vélos électriques dédiés à la collecte des déchets. Elle combine une interface utilisateur intuitive (Frontend) avec une API robuste (Backend), et utilise [OpenRouteService (ORS)](https://openrouteservice.org/) pour calculer les itinéraires optimaux.
 
 ---
 
@@ -81,7 +81,7 @@ WattUp
 
 ## 🗺️ Accès au site (ORS)
 
-- Accédez à l'interface à l'adresse suivante : [WattUp](http://localhost:8000)
+- Accédez à l'interface à l'adresse suivante : [WattSup](http://localhost:8000)
 
 ## 🛠️ Technologies utilisées
 
