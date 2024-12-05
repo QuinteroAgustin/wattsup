@@ -78,6 +78,9 @@ php bin/console doctrine:migrations:migrate
 
 [BASE.sql](https://github.com/QuinteroAgustin/wattsup/blob/master/bdd/base.sql)
 
+Mot de passe du compte Olivier : qqqqqqqq
+Mot de passe du compte d'agustin et compte de clement : aaaaaaaa
+
 ---
 
 ## 🛠️ Technologies utilisées
