@@ -54,45 +54,44 @@ WattUp
 6. Démarer le serveur
 
 7. Ouvrir le projet avec VS Code
+
 8. Se placer dans le dossier du projet
+
 9. Faire un 
    ```bash
    git clone git@github.com:QuinteroAgustin/wattsup.git
+
 10. Se placer dans le dossier que git a créer
    ```bash
    cd wattup
+
 11. Installer composer dans le dossier
    ```bash
    composer install
+
 12. Installer NPM
    ```bash
    npm install --global yarn
    npm i –force
+
 13. Start le serveur (dans deux terminaux)
    ```bash
    npm run watch
    symfony server:start
+
 14. Installer la BDD (vide)
    ```bash
    php bin\console make:migration
    php bin\console doctrine:migrations:migrate
+
 15. Installer notre BDD
-   [BASE.sql](https://nodejs.org/en/download/package-manager/current)
+   [BASE.sql](https://github.com/QuinteroAgustin/wattsup/blob/master/bdd/base.sql)
+
 ---
 
 ## 🗺️ Accès au site (ORS)
 
-### **Installation et Exécution**
-
-1. Rendez-vous dans le dossier **ors** :
-   ```bash
-   cd ors
-
-2. Lancez le service Docker pour ORS :
-   ```bash
-   docker compose up
-
-3. Accédez à l'interface ORS à l'adresse suivante : http://localhost:8080
+- Accédez à l'interface à l'adresse suivante : [WattUp](http://localhost:8000)
 
 ## 🛠️ Technologies utilisées
 
