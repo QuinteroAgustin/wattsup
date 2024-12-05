@@ -52,6 +52,7 @@ WattUp
    git clone git@github.com:QuinteroAgustin/wattsup.git
 
 10. Se placer dans le dossier que git a créer
+   ```bash
    cd wattsup
 
 11. Installer composer dans le dossier
